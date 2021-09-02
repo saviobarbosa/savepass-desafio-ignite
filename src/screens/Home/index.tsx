@@ -31,14 +31,28 @@ export function Home() {
   async function loadData() {
     const dataKey = '@savepass:logins';
     // Get asyncStorage data, use setSearchListData and setData
+    const passwords = await AsyncStorage.getItem(dataKey);
+
+    setSearchListData(JSON.parse(passwords));
+    setData(JSON.parse(passwords));
   }
 
   function handleFilterLoginData() {
     // Filter results inside data, save with setSearchListData
+    if(searchText !== "") {
+      const filteredData = data.filter(item => item.service_name === searchText);
+
+      setSearchListData(filteredData);
+    } else {
+      setSearchListData(data);
+    }
   }
 
   function handleChangeInputText(text: string) {
     // Update searchText value
+    if(text !== null || text !== "") {
+      setSearchText(text);
+    }
   }
 
   useFocusEffect(useCallback(() => {
@@ -60,7 +74,7 @@ export function Home() {
           value={searchText}
           returnKeyType="search"
           onSubmitEditing={handleFilterLoginData}
-
+          
           onSearchButtonPress={handleFilterLoginData}
         />
 
